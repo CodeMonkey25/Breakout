@@ -2,14 +2,15 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace DesktopClient;
+namespace GameMain;
 
-public class Game1 : Game
+public class Main : Game
 {
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
+    private Character hero;
 
-    public Game1()
+    public Main()
     {
         _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
@@ -26,6 +27,7 @@ public class Game1 : Game
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
+        hero = new Character(_graphics.GraphicsDevice);
 
         // TODO: use this.Content to load your game content here
     }
@@ -35,6 +37,7 @@ public class Game1 : Game
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
 
+        hero.Update(gameTime);
         // TODO: Add your update logic here
 
         base.Update(gameTime);
@@ -45,6 +48,7 @@ public class Game1 : Game
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
         // TODO: Add your drawing code here
+        hero.Draw(_spriteBatch);
 
         base.Draw(gameTime);
     }
