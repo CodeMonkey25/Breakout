@@ -7,5 +7,8 @@
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Remove="Content\GameFont.spritefont" />
+  </ItemGroup>
   <Import Project="..\GameEngine\GameEngine.projitems" Label="Shared" />
 </Project>
