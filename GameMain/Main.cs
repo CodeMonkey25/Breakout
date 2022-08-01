@@ -8,9 +8,10 @@ public class Main : Game
 {
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
-    private Paddle paddle;
-    private MouseState mState;
     private SpriteFont _font;
+    
+    private Board Board { get; set; }
+    private MouseState MouseState { get; set; }
     
     public Main()
     {
@@ -32,7 +33,7 @@ public class Main : Game
 
         // TODO: use this.Content to load your game content here
         _font = Content.Load<SpriteFont>("GameFont");
-        paddle = new Paddle(_graphics.GraphicsDevice);
+        Board = new Board(_graphics.GraphicsDevice);
     }
 
     protected override void Update(GameTime gameTime)
@@ -41,30 +42,31 @@ public class Main : Game
             Exit();
 
         // TODO: Add your update logic here
-        mState = Mouse.GetState();
-        paddle.Update(gameTime, mState);
+        MouseState = Mouse.GetState();
+        Board.Update(gameTime, MouseState);
         
         base.Update(gameTime);
     }
 
     protected override void Draw(GameTime gameTime)
     {
-        string text;
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
         // TODO: Add your drawing code here
+        Board.Draw(_spriteBatch);
+        
         _spriteBatch.Begin();
+        string text;
         text = $"screen: {_graphics.GraphicsDevice.Viewport.Width}, {_graphics.GraphicsDevice.Viewport.Height}";
         _spriteBatch.DrawString(_font, text, new Vector2(20, 20), Color.White);
-        text = $"mouse: {mState.X}, {mState.Y}";
-        _spriteBatch.DrawString(_font, text, new Vector2(20, 40), Color.White);
-        text = $"paddle position: ({paddle.X}, {paddle.Y})";
-        _spriteBatch.DrawString(_font, text, new Vector2(20, 60), Color.White);
-        text = $"paddle size: ({paddle.Width}, {paddle.Height})";
-        _spriteBatch.DrawString(_font, text, new Vector2(20, 80), Color.White);
+        // text = $"mouse: {MouseState.X}, {MouseState.Y}";
+        // _spriteBatch.DrawString(_font, text, new Vector2(20, 40), Color.White);
+        // text = $"paddle position: ({Board.Paddle.X}, {Board.Paddle.Y})";
+        // _spriteBatch.DrawString(_font, text, new Vector2(20, 60), Color.White);
+        // text = $"paddle size: ({Board.Paddle.Width}, {Board.Paddle.Height})";
+        // _spriteBatch.DrawString(_font, text, new Vector2(20, 80), Color.White);
         _spriteBatch.End();
         
-        paddle.Draw(_spriteBatch);
         
         base.Draw(gameTime);
     }
