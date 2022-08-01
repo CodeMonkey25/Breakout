@@ -1,6 +1,7 @@
 using GameMain.GameEngine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended;
 
 namespace GameMain;
 
@@ -10,12 +11,13 @@ public class Brick
     public const int RequestedHeight = 20;
     public const int Cushion = 10;
 
-    private RectangleShape Sprite { get; }
+    private readonly Vector2 _location;
+    private readonly Size2 _size;
 
     public Brick(GraphicsDevice graphicsDevice, int x, int y)
     {
-        Sprite = new RectangleShape(graphicsDevice, RequestedWidth, RequestedHeight, Color.Red);
-        Sprite.UpdatePosition(x, y);
+        _location = new Vector2(x, y);
+        _size = new Size2(RequestedWidth, RequestedHeight);
     }
 
     public void Update(GameTime gameTime)
@@ -26,7 +28,7 @@ public class Brick
     public void Draw(SpriteBatch spriteBatch)
     {
         spriteBatch.Begin();
-        spriteBatch.Draw(Sprite.Texture, Sprite.Rectangle, Color.White);
+        spriteBatch.FillRectangle(_location, _size, Color.Red);
         spriteBatch.End();
     }
 }

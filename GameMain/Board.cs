@@ -13,15 +13,20 @@ public class Board
     private RectangleShape Sprite { get; }
     
     private Paddle Paddle { get; }
+    private Ball Ball { get; }
     private List<Brick> Bricks { get; }
 
     public Board(GraphicsDevice graphicsDevice)
     {
         Width = graphicsDevice.Viewport.Width;
         Height = graphicsDevice.Viewport.Height;
+        
+        // create board
         Sprite = new RectangleShape(graphicsDevice, Width, Height, Color.Black);
+        
+        // create paddle
         Paddle = new Paddle(graphicsDevice);
-
+        
         // create bricks
         int rowCount = Height / 3 / (Brick.RequestedHeight + Brick.Cushion);
         int columnCount = Width / (Brick.RequestedWidth + Brick.Cushion);
@@ -47,6 +52,9 @@ public class Board
 
             y += Brick.Cushion + Brick.RequestedHeight;
         }
+        
+        // create ball
+        Ball = new Ball(graphicsDevice, paddingX, y + paddingX);
     }
 
     public void Update(GameTime gameTime, MouseState mouseState)
@@ -56,14 +64,14 @@ public class Board
         {
             brick.Update(gameTime);
         }
-        // update ball
+        Ball.Update(gameTime);
         // detect collisions
     }
     
     public void Draw(SpriteBatch spriteBatch)
     {
         spriteBatch.Begin();
-        spriteBatch.Draw(Sprite.Texture, Sprite.Rectangle, Color.White);
+        spriteBatch.Draw(Sprite.Texture, Sprite.Bounds, Color.White);
         spriteBatch.End();
         
         Paddle.Draw(spriteBatch);
@@ -71,5 +79,6 @@ public class Board
         {
             brick.Draw(spriteBatch);
         }
+        Ball.Draw(spriteBatch);
     }
 }

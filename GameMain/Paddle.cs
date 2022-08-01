@@ -3,6 +3,8 @@ using GameMain.GameEngine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MonoGame.Extended;
+using MonoGame.Extended.Sprites;
 
 namespace GameMain;
 
@@ -13,22 +15,25 @@ public class Paddle
     private const float Speed = 0.3f;
     
     private int MaxX { get; }
-    private RectangleShape Sprite { get; }
+    
+    private Vector2 _location;
+    private readonly Size2 _size;
     
     public Paddle(GraphicsDevice graphicsDevice)
     {
-        Sprite = new RectangleShape(graphicsDevice, RequestedWidth, RequestedHeight, Color.Blue);
-        MaxX = graphicsDevice.Viewport.Width - Sprite.Width;
-        int maxY = graphicsDevice.Viewport.Height - Sprite.Height;
-        Sprite.UpdatePosition(
-            MaxX / 2,
+        _size = new Size2(RequestedWidth, RequestedHeight);
+        
+        MaxX = graphicsDevice.Viewport.Width - (int)_size.Width;
+        int maxY = graphicsDevice.Viewport.Height - (int)_size.Height;
+        _location = new Vector2(
+            ((float)MaxX / 2),
             maxY - 25
         );
     }
 
     public void Update(GameTime gameTime, MouseState mouseState)
     {
-        int startingX = Sprite.X + Sprite.Width / 2;
+        int startingX = (int)_location.X + (int)_size.Width / 2;
         int targetX = mouseState.X;  
         
         int multiplier = 0;
@@ -54,16 +59,16 @@ public class Paddle
             return;
         }
         
-        int newX = Sprite.X + delta;
+        int newX = (int)_location.X + delta;
         newX = Math.Min(newX, MaxX);
         newX = Math.Max(newX, 0);
-        Sprite.UpdateX(newX);
+        _location.X = newX;
     }
 
     public void Draw(SpriteBatch spriteBatch)
     {
         spriteBatch.Begin();
-        spriteBatch.Draw(Sprite.Texture, Sprite.Rectangle, Color.White);
+        spriteBatch.FillRectangle(_location, _size, Color.Blue);
         spriteBatch.End();
     }
 }
