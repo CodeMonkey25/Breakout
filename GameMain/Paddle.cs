@@ -34,12 +34,15 @@ public class Paddle
 
     public void Update(GameTime gameTime, MouseState mouseState)
     {
+        int startingX = (int)position.X + width / 2;
+        int targetX = mouseState.X;  
+        
         int multiplier = 0;
-        if (mouseState.X <= position.X)
+        if (targetX < startingX)
         {
             multiplier = -1;
         }
-        else if (mouseState.X >= (position.X + Width))
+        else if (targetX > startingX)
         {
             multiplier = 1;
         }
@@ -49,7 +52,9 @@ public class Paddle
             return;
         }
 
-        int delta = multiplier * (int)(speed * gameTime.ElapsedGameTime.TotalMilliseconds);
+        int delta = (int)(speed * gameTime.ElapsedGameTime.TotalMilliseconds);
+        delta = Math.Min(delta, Math.Abs(startingX - targetX));
+        delta *= multiplier;
         if (delta == 0)
         {
             return;
