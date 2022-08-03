@@ -12,7 +12,7 @@ public class Brick
 
     public RectangleF Rectangle { get; }
 
-    public Brick(GraphicsDevice graphicsDevice, int x, int y)
+    public Brick(int x, int y)
     {
         Rectangle = new RectangleF(x, y, Width, Height);
     }

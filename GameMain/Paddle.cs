@@ -17,10 +17,10 @@ public class Paddle
     private RectangleF _rectangle;
     public RectangleF Rectangle => _rectangle;
     
-    public Paddle(GraphicsDevice graphicsDevice)
+    public Paddle(int boardWidth, int boardHeight)
     {
-        _maxX = graphicsDevice.Viewport.Width - Width;
-        float maxY = graphicsDevice.Viewport.Height - Height;
+        _maxX = boardWidth - Width;
+        float maxY = boardHeight - Height;
         _rectangle = new RectangleF(
             _maxX / 2f,
             maxY - 25f,

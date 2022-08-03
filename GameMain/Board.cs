@@ -1,43 +1,39 @@
 using System.Collections.Generic;
-using GameMain.GameEngine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MonoGame.Extended;
 
 namespace GameMain;
 
 public class Board
 {
-    public int Width { get; }
-    public int Height { get; }
-    private RectangleShape Sprite { get; }
-
     private Paddle Paddle { get; }
     private Ball Ball { get; }
     private List<Brick> Bricks { get; }
-
-    public Board(GraphicsDevice graphicsDevice)
+    private RectangleF Rectangle { get; }
+    public float Width => Rectangle.Width;
+    public float Height => Rectangle.Height;
+    
+    public Board(GraphicsDevice graphicsDevice, int width, int height)
     {
-        Width = graphicsDevice.Viewport.Width;
-        Height = graphicsDevice.Viewport.Height;
-
         // create board
-        Sprite = new RectangleShape(graphicsDevice, Width, Height, Color.Black);
+        Rectangle = new RectangleF(0f,0f, width, height);
 
         // create paddle
-        Paddle = new Paddle(graphicsDevice);
+        Paddle = new Paddle(width, height);
 
         // create bricks
-        int rowCount = Height / 3 / (Brick.Height + Brick.Cushion);
-        int columnCount = Width / (Brick.Width + Brick.Cushion);
+        int rowCount = height / 3 / (Brick.Height + Brick.Cushion);
+        int columnCount = width / (Brick.Width + Brick.Cushion);
 
         int usedWidth = Brick.Width * columnCount
                         + Brick.Cushion * (columnCount - 1);
-        int paddingX = (Width - usedWidth) / 2;
+        int paddingX = (width - usedWidth) / 2;
 
         int usedHeight = Brick.Height * rowCount
                          + Brick.Cushion * (rowCount - 1);
-        int paddingY = (Height / 2 - usedHeight) / 2;
+        int paddingY = (height / 2 - usedHeight) / 2;
 
         Bricks = new List<Brick>(columnCount * rowCount);
         int y = paddingY;
@@ -46,7 +42,7 @@ public class Board
             int x = paddingX;
             for (int j = 0; j < columnCount; j++)
             {
-                Bricks.Add(new Brick(graphicsDevice, x, y));
+                Bricks.Add(new Brick(x, y));
                 x += Brick.Cushion + Brick.Width;
             }
 
@@ -54,7 +50,7 @@ public class Board
         }
 
         // create ball
-        Ball = new Ball(graphicsDevice, paddingX, y + paddingX);
+        Ball = new Ball(graphicsDevice, this, paddingX, y + paddingX);
     }
 
     public void Update(GameTime gameTime, MouseState mouseState)
@@ -70,7 +66,7 @@ public class Board
         // detect collisions
         if (Ball.DetectCollision(this))
         {
-            // check for end game
+            // check for game over
         }
         else if (Ball.DetectCollision(Paddle))
         {
@@ -79,13 +75,15 @@ public class Board
         else
         {
             Bricks.RemoveAll(Ball.DetectCollision);
+            // check for game win
         }
     }
 
-    public void Draw(SpriteBatch spriteBatch)
+    public void Draw(SpriteBatch spriteBatch, SpriteFont font)
     {
         spriteBatch.Begin();
-        spriteBatch.Draw(Sprite.Texture, Sprite.Bounds, Color.White);
+        spriteBatch.FillRectangle(Rectangle, Color.Black);
+        spriteBatch.DrawString(font, $"BRICKS: {Bricks.Count}", new Vector2(20, 20), Color.White);
         spriteBatch.End();
 
         Paddle.Draw(spriteBatch);
@@ -93,7 +91,6 @@ public class Board
         {
             brick.Draw(spriteBatch);
         }
-
         Ball.Draw(spriteBatch);
     }
 }

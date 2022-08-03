@@ -19,11 +19,11 @@ public class Ball
     private Matrix _localView;
     private Vector2 _motionVector = Vector2.One;
 
-    public Ball(GraphicsDevice graphicsDevice, int x, int y)
+    public Ball(GraphicsDevice graphicsDevice, Board board, int x, int y)
     {
         _circle = new CircleF(new Point2(x, y), Radius);
-        _localProjection = Matrix.CreateOrthographicOffCenter(0f, graphicsDevice.Viewport.Width,
-            graphicsDevice.Viewport.Height, 0f, 0f, 1f);
+        _localProjection = Matrix.CreateOrthographicOffCenter(0f, board.Width,
+            board.Height, 0f, 0f, 1f);
         _localView = Matrix.Identity;
         _primitiveBatch = new PrimitiveBatch(graphicsDevice);
         _primitiveDrawing = new PrimitiveDrawing(_primitiveBatch);
@@ -136,7 +136,6 @@ public class Ball
     public void Draw(SpriteBatch spriteBatch)
     {
         _primitiveBatch.Begin(ref _localProjection, ref _localView);
-        // _primitiveDrawing.DrawSolidCircle(_location, _radius, Color.White);
         FillCircle(_circle, Color.White);
         _primitiveBatch.End();
     }
