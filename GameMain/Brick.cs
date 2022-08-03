@@ -7,17 +7,16 @@ namespace GameMain;
 
 public class Brick
 {
-    public const int RequestedWidth = 50;
-    public const int RequestedHeight = 20;
+    public const int Width = 50;
+    public const int Height = 20;
     public const int Cushion = 10;
 
-    private readonly Vector2 _location;
-    private readonly Size2 _size;
+    private readonly RectangleF _rectangle;
+    public RectangleF Rectangle => _rectangle;
 
     public Brick(GraphicsDevice graphicsDevice, int x, int y)
     {
-        _location = new Vector2(x, y);
-        _size = new Size2(RequestedWidth, RequestedHeight);
+        _rectangle = new RectangleF(x, y, Width, Height);
     }
 
     public void Update(GameTime gameTime)
@@ -28,7 +27,7 @@ public class Brick
     public void Draw(SpriteBatch spriteBatch)
     {
         spriteBatch.Begin();
-        spriteBatch.FillRectangle(_location, _size, Color.Red);
+        spriteBatch.FillRectangle(_rectangle, Color.Red);
         spriteBatch.End();
     }
 }

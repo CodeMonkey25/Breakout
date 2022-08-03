@@ -28,14 +28,14 @@ public class Board
         Paddle = new Paddle(graphicsDevice);
         
         // create bricks
-        int rowCount = Height / 3 / (Brick.RequestedHeight + Brick.Cushion);
-        int columnCount = Width / (Brick.RequestedWidth + Brick.Cushion);
+        int rowCount = Height / 3 / (Brick.Height + Brick.Cushion);
+        int columnCount = Width / (Brick.Width + Brick.Cushion);
 
-        int usedWidth = Brick.RequestedWidth * columnCount
+        int usedWidth = Brick.Width * columnCount
                         + Brick.Cushion * (columnCount - 1);
         int paddingX = (Width - usedWidth) / 2;
 
-        int usedHeight = Brick.RequestedHeight * rowCount
+        int usedHeight = Brick.Height * rowCount
                          + Brick.Cushion * (rowCount - 1);
         int paddingY = ((Height / 2) - usedHeight) / 2;
 
@@ -47,10 +47,10 @@ public class Board
             for (int j = 0; j < columnCount; j++)
             {
                 Bricks.Add(new Brick(graphicsDevice, x, y));
-                x += Brick.Cushion + Brick.RequestedWidth;
+                x += Brick.Cushion + Brick.Width;
             }
 
-            y += Brick.Cushion + Brick.RequestedHeight;
+            y += Brick.Cushion + Brick.Height;
         }
         
         // create ball
@@ -65,7 +65,20 @@ public class Board
             brick.Update(gameTime);
         }
         Ball.Update(gameTime);
+        
         // detect collisions
+        if (Ball.DetectCollision(this))
+        {
+            // check for end game
+        }
+        else if (Ball.DetectCollision(Paddle))
+        {
+            // do nothing?
+        }
+        else
+        {
+            Bricks.RemoveAll(Ball.DetectCollision);
+        }
     }
     
     public void Draw(SpriteBatch spriteBatch)

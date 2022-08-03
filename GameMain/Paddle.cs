@@ -10,30 +10,30 @@ namespace GameMain;
 
 public class Paddle
 {
-    private const int RequestedWidth = 100;
-    private const int RequestedHeight = 20;
-    private const float Speed = 0.3f;
+    private const float Width = 100f;
+    private const float Height = 20f;
+    private const float Speed = 0.5f;
+
+    private readonly float _maxX;
     
-    private int MaxX { get; }
-    
-    private Vector2 _location;
-    private readonly Size2 _size;
-    
+    private RectangleF _rectangle;
+    public RectangleF Rectangle => _rectangle;
+
     public Paddle(GraphicsDevice graphicsDevice)
     {
-        _size = new Size2(RequestedWidth, RequestedHeight);
-        
-        MaxX = graphicsDevice.Viewport.Width - (int)_size.Width;
-        int maxY = graphicsDevice.Viewport.Height - (int)_size.Height;
-        _location = new Vector2(
-            ((float)MaxX / 2),
-            maxY - 25
+        _maxX = graphicsDevice.Viewport.Width - Width;
+        float maxY = graphicsDevice.Viewport.Height - Height;
+        _rectangle = new RectangleF(
+            _maxX / 2f,
+            maxY - 25f,
+            Width, 
+            Height
         );
     }
 
     public void Update(GameTime gameTime, MouseState mouseState)
     {
-        int startingX = (int)_location.X + (int)_size.Width / 2;
+        float startingX = _rectangle.X + _rectangle.Width / 2f;
         int targetX = mouseState.X;  
         
         int multiplier = 0;
@@ -51,7 +51,7 @@ public class Paddle
             return;
         }
 
-        int delta = (int)(Speed * gameTime.ElapsedGameTime.TotalMilliseconds);
+        float delta = (float)(Speed * gameTime.ElapsedGameTime.TotalMilliseconds);
         delta = Math.Min(delta, Math.Abs(startingX - targetX));
         delta *= multiplier;
         if (delta == 0)
@@ -59,16 +59,16 @@ public class Paddle
             return;
         }
         
-        int newX = (int)_location.X + delta;
-        newX = Math.Min(newX, MaxX);
+        float newX = _rectangle.X + delta;
+        newX = Math.Min(newX, _maxX);
         newX = Math.Max(newX, 0);
-        _location.X = newX;
+        _rectangle.X = newX;
     }
 
     public void Draw(SpriteBatch spriteBatch)
     {
         spriteBatch.Begin();
-        spriteBatch.FillRectangle(_location, _size, Color.Blue);
+        spriteBatch.FillRectangle(_rectangle, Color.Blue);
         spriteBatch.End();
     }
 }
