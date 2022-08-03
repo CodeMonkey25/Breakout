@@ -11,7 +11,7 @@ public class Board
     public int Width { get; }
     public int Height { get; }
     private RectangleShape Sprite { get; }
-    
+
     private Paddle Paddle { get; }
     private Ball Ball { get; }
     private List<Brick> Bricks { get; }
@@ -20,13 +20,13 @@ public class Board
     {
         Width = graphicsDevice.Viewport.Width;
         Height = graphicsDevice.Viewport.Height;
-        
+
         // create board
         Sprite = new RectangleShape(graphicsDevice, Width, Height, Color.Black);
-        
+
         // create paddle
         Paddle = new Paddle(graphicsDevice);
-        
+
         // create bricks
         int rowCount = Height / 3 / (Brick.Height + Brick.Cushion);
         int columnCount = Width / (Brick.Width + Brick.Cushion);
@@ -37,7 +37,7 @@ public class Board
 
         int usedHeight = Brick.Height * rowCount
                          + Brick.Cushion * (rowCount - 1);
-        int paddingY = ((Height / 2) - usedHeight) / 2;
+        int paddingY = (Height / 2 - usedHeight) / 2;
 
         Bricks = new List<Brick>(columnCount * rowCount);
         int y = paddingY;
@@ -52,7 +52,7 @@ public class Board
 
             y += Brick.Cushion + Brick.Height;
         }
-        
+
         // create ball
         Ball = new Ball(graphicsDevice, paddingX, y + paddingX);
     }
@@ -64,8 +64,9 @@ public class Board
         {
             brick.Update(gameTime);
         }
+
         Ball.Update(gameTime);
-        
+
         // detect collisions
         if (Ball.DetectCollision(this))
         {
@@ -80,18 +81,19 @@ public class Board
             Bricks.RemoveAll(Ball.DetectCollision);
         }
     }
-    
+
     public void Draw(SpriteBatch spriteBatch)
     {
         spriteBatch.Begin();
         spriteBatch.Draw(Sprite.Texture, Sprite.Bounds, Color.White);
         spriteBatch.End();
-        
+
         Paddle.Draw(spriteBatch);
         foreach (Brick brick in Bricks)
         {
             brick.Draw(spriteBatch);
         }
+
         Ball.Draw(spriteBatch);
     }
 }

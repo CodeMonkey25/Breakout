@@ -1,9 +1,7 @@
 using System;
-using GameMain.GameEngine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
-using MonoGame.Extended.Sprites;
 using MonoGame.Extended.VectorDraw;
 
 namespace GameMain;
@@ -12,19 +10,20 @@ public class Ball
 {
     private const int Radius = 7;
     private const float Speed = 0.15f;
-
-    private readonly PrimitiveDrawing _primitiveDrawing;
-    private readonly PrimitiveBatch _primitiveBatch;
     
+    private readonly PrimitiveBatch _primitiveBatch;
+    private readonly PrimitiveDrawing _primitiveDrawing;
+    
+    private CircleF _circle;
     private Matrix _localProjection;
     private Matrix _localView;
-    private CircleF _circle;
     private Vector2 _motionVector = Vector2.One;
 
     public Ball(GraphicsDevice graphicsDevice, int x, int y)
     {
         _circle = new CircleF(new Point2(x, y), Radius);
-        _localProjection = Matrix.CreateOrthographicOffCenter(0f, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height, 0f, 0f, 1f);
+        _localProjection = Matrix.CreateOrthographicOffCenter(0f, graphicsDevice.Viewport.Width,
+            graphicsDevice.Viewport.Height, 0f, 0f, 1f);
         _localView = Matrix.Identity;
         _primitiveBatch = new PrimitiveBatch(graphicsDevice);
         _primitiveDrawing = new PrimitiveDrawing(_primitiveBatch);
@@ -36,17 +35,24 @@ public class Ball
         _circle.Position += new Vector2(_motionVector.X, _motionVector.Y)
                             * delta;
     }
-    
-    private void BounceX() { _motionVector.X *= -1; }
-    private void BounceY() { _motionVector.Y *= -1; }
+
+    private void BounceX()
+    {
+        _motionVector.X *= -1;
+    }
+
+    private void BounceY()
+    {
+        _motionVector.Y *= -1;
+    }
 
     public bool DetectCollision(Board board)
     {
         bool collision = false;
-        
+
         float maxX = board.Width - _circle.Radius;
         float maxY = board.Height - _circle.Radius;
-        
+
         // check for wall collisions
         if (_circle.Center.X < _circle.Radius)
         {
@@ -54,13 +60,13 @@ public class Ball
             BounceX();
             collision = true;
         }
-        else if (_circle.Center.X > maxX) 
+        else if (_circle.Center.X > maxX)
         {
             _circle.Center.X = maxX;
             BounceX();
             collision = true;
         }
-		
+
         // check for ceiling/floor collisions
         if (_circle.Center.Y < _circle.Radius)
         {
@@ -77,21 +83,21 @@ public class Ball
 
         return collision;
     }
-    
+
     public bool DetectCollision(Paddle paddle)
     {
         if (!DetectCollision(paddle.Rectangle))
         {
             return false;
         }
-        
+
         // don't let the ball get trapped inside the paddle
         BoundingRectangle rectangle = paddle.Rectangle;
         do
         {
             _circle.Position += _motionVector;
         } while (_circle.Intersects(rectangle));
-        
+
         return true;
     }
 
@@ -99,14 +105,14 @@ public class Ball
     {
         return DetectCollision(brick.Rectangle);
     }
-    
+
     private bool DetectCollision(RectangleF rectangle)
     {
         if (!_circle.Intersects((BoundingRectangle)rectangle))
         {
             return false;
         }
-        
+
         if (_circle.Center.X > rectangle.Left && rectangle.Right > _circle.Center.X)
         {
             // solid hit on the top/bottom of the brick
@@ -123,10 +129,10 @@ public class Ball
             BounceX();
             BounceY();
         }
-        
+
         return true;
     }
-    
+
     public void Draw(SpriteBatch spriteBatch)
     {
         _primitiveBatch.Begin(ref _localProjection, ref _localView);
@@ -134,7 +140,7 @@ public class Ball
         FillCircle(_circle, Color.White);
         _primitiveBatch.End();
     }
-    
+
     // This is the same method as PrimitiveDrawing DrawSolidCircle() without the lighter fill color 
     private void FillCircle(CircleF circleF, Color color)
     {
@@ -149,7 +155,8 @@ public class Ball
         for (int i = 1; i < PrimitiveDrawing.CircleSegments - 1; i++)
         {
             Vector2 v1 = center + radius * new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta));
-            Vector2 v2 = center + radius * new Vector2((float)Math.Cos(theta + increment), (float)Math.Sin(theta + increment));
+            Vector2 v2 = center +
+                         radius * new Vector2((float)Math.Cos(theta + increment), (float)Math.Sin(theta + increment));
 
             _primitiveBatch.AddVertex(v0, color, PrimitiveType.TriangleList);
             _primitiveBatch.AddVertex(v1, color, PrimitiveType.TriangleList);
@@ -158,6 +165,6 @@ public class Ball
             theta += increment;
         }
 
-        _primitiveDrawing.DrawCircle(center, radius, color);            
+        _primitiveDrawing.DrawCircle(center, radius, color);
     }
 }

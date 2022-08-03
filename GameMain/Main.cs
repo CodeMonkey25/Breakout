@@ -6,13 +6,13 @@ namespace GameMain;
 
 public class Main : Game
 {
-    private GraphicsDeviceManager _graphics;
-    private SpriteBatch _spriteBatch;
+    private readonly GraphicsDeviceManager _graphics;
     private SpriteFont _font;
-    
+    private SpriteBatch _spriteBatch;
+
     private Board Board { get; set; }
     private MouseState MouseState { get; set; }
-    
+
     public Main()
     {
         _graphics = new GraphicsDeviceManager(this);
@@ -38,13 +38,16 @@ public class Main : Game
 
     protected override void Update(GameTime gameTime)
     {
-        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
+            Keyboard.GetState().IsKeyDown(Keys.Escape))
+        {
             Exit();
+        }
 
         // TODO: Add your update logic here
         MouseState = Mouse.GetState();
         Board.Update(gameTime, MouseState);
-        
+
         base.Update(gameTime);
     }
 
@@ -54,7 +57,7 @@ public class Main : Game
 
         // TODO: Add your drawing code here
         Board.Draw(_spriteBatch);
-        
+
         _spriteBatch.Begin();
         string text;
         text = $"screen: {_graphics.GraphicsDevice.Viewport.Width}, {_graphics.GraphicsDevice.Viewport.Height}";
@@ -66,8 +69,8 @@ public class Main : Game
         // text = $"paddle size: ({Board.Paddle.Width}, {Board.Paddle.Height})";
         // _spriteBatch.DrawString(_font, text, new Vector2(20, 80), Color.White);
         _spriteBatch.End();
-        
-        
+
+
         base.Draw(gameTime);
     }
 }

@@ -1,10 +1,8 @@
 using System;
-using GameMain.GameEngine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
-using MonoGame.Extended.Sprites;
 
 namespace GameMain;
 
@@ -15,10 +13,10 @@ public class Paddle
     private const float Speed = 0.5f;
 
     private readonly float _maxX;
-    
+
     private RectangleF _rectangle;
     public RectangleF Rectangle => _rectangle;
-
+    
     public Paddle(GraphicsDevice graphicsDevice)
     {
         _maxX = graphicsDevice.Viewport.Width - Width;
@@ -26,7 +24,7 @@ public class Paddle
         _rectangle = new RectangleF(
             _maxX / 2f,
             maxY - 25f,
-            Width, 
+            Width,
             Height
         );
     }
@@ -34,8 +32,8 @@ public class Paddle
     public void Update(GameTime gameTime, MouseState mouseState)
     {
         float startingX = _rectangle.X + _rectangle.Width / 2f;
-        int targetX = mouseState.X;  
-        
+        int targetX = mouseState.X;
+
         int multiplier = 0;
         if (targetX < startingX)
         {
@@ -58,7 +56,7 @@ public class Paddle
         {
             return;
         }
-        
+
         float newX = _rectangle.X + delta;
         newX = Math.Min(newX, _maxX);
         newX = Math.Max(newX, 0);

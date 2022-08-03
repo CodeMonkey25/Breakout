@@ -5,32 +5,31 @@ using Android.Views;
 using GameMain;
 using Microsoft.Xna.Framework;
 
-namespace AndroidClient
+namespace AndroidClient;
+
+[Activity(
+    Label = "@string/app_name",
+    MainLauncher = true,
+    Icon = "@drawable/icon",
+    AlwaysRetainTaskState = true,
+    LaunchMode = LaunchMode.SingleInstance,
+    ScreenOrientation = ScreenOrientation.FullUser,
+    ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.Keyboard | ConfigChanges.KeyboardHidden |
+                           ConfigChanges.ScreenSize
+)]
+public class Activity1 : AndroidGameActivity
 {
-    [Activity(
-        Label = "@string/app_name",
-        MainLauncher = true,
-        Icon = "@drawable/icon",
-        AlwaysRetainTaskState = true,
-        LaunchMode = LaunchMode.SingleInstance,
-        ScreenOrientation = ScreenOrientation.FullUser,
-        ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.Keyboard | ConfigChanges.KeyboardHidden |
-                               ConfigChanges.ScreenSize
-    )]
-    public class Activity1 : AndroidGameActivity
+    private Main _game;
+    private View _view;
+
+    protected override void OnCreate(Bundle bundle)
     {
-        private Main _game;
-        private View _view;
+        base.OnCreate(bundle);
 
-        protected override void OnCreate(Bundle bundle)
-        {
-            base.OnCreate(bundle);
+        _game = new Main();
+        _view = _game.Services.GetService(typeof(View)) as View;
 
-            _game = new Main();
-            _view = _game.Services.GetService(typeof(View)) as View;
-
-            SetContentView(_view);
-            _game.Run();
-        }
+        SetContentView(_view);
+        _game.Run();
     }
 }
