@@ -21,8 +21,9 @@ public class Brick
     {
     }
 
-    public void Draw(SpriteBatch spriteBatch)
+    public void Draw()
     {
+        SpriteBatch spriteBatch = Breakout.BreakoutServices.GetService<SpriteBatch>();
         spriteBatch.Begin();
         spriteBatch.FillRectangle(Rectangle, Color.Red);
         spriteBatch.End();

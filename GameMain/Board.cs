@@ -15,25 +15,28 @@ public class Board
     public float Width => Rectangle.Width;
     public float Height => Rectangle.Height;
     
-    public Board(GraphicsDevice graphicsDevice, int width, int height)
+    public Board(GraphicsDevice graphicsDevice)
     {
         // create board
-        Rectangle = new RectangleF(0f,0f, width, height);
+        Rectangle = new RectangleF(
+            0f,
+            0f,
+            graphicsDevice.Viewport.Width,
+            graphicsDevice.Viewport.Height
+        );
 
         // create paddle
-        Paddle = new Paddle(width, height);
+        Paddle = new Paddle(Width, Height);
 
         // create bricks
-        int rowCount = height / 3 / (Brick.Height + Brick.Cushion);
-        int columnCount = width / (Brick.Width + Brick.Cushion);
+        int rowCount = (int)Height / 3 / (Brick.Height + Brick.Cushion);
+        int columnCount = (int)Width / (Brick.Width + Brick.Cushion);
 
-        int usedWidth = Brick.Width * columnCount
-                        + Brick.Cushion * (columnCount - 1);
-        int paddingX = (width - usedWidth) / 2;
+        int usedWidth = Brick.Width * columnCount + Brick.Cushion * (columnCount - 1);
+        int paddingX = ((int)Width - usedWidth) / 2;
 
-        int usedHeight = Brick.Height * rowCount
-                         + Brick.Cushion * (rowCount - 1);
-        int paddingY = (height / 2 - usedHeight) / 2;
+        int usedHeight = Brick.Height * rowCount + Brick.Cushion * (rowCount - 1);
+        int paddingY = ((int)Height / 2 - usedHeight) / 2;
 
         Bricks = new List<Brick>(columnCount * rowCount);
         int y = paddingY;
@@ -79,18 +82,22 @@ public class Board
         }
     }
 
-    public void Draw(SpriteBatch spriteBatch, SpriteFont font)
+    public void Draw()
     {
+        SpriteFont font = Breakout.BreakoutServices.GetService<SpriteFont>();
+        SpriteBatch spriteBatch = Breakout.BreakoutServices.GetService<SpriteBatch>();
+        
         spriteBatch.Begin();
         spriteBatch.FillRectangle(Rectangle, Color.Black);
-        spriteBatch.DrawString(font, $"BRICKS: {Bricks.Count}", new Vector2(20, 20), Color.White);
+        spriteBatch.DrawString(font, $"BRICKS: {Bricks.Count}", new Vector2(20, 8), Color.White);
         spriteBatch.End();
-
-        Paddle.Draw(spriteBatch);
+        
+        Paddle.Draw();
         foreach (Brick brick in Bricks)
         {
-            brick.Draw(spriteBatch);
+            brick.Draw();
         }
-        Ball.Draw(spriteBatch);
+        
+        Ball.Draw();
     }
 }

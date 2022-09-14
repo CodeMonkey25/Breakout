@@ -11,9 +11,6 @@ public class Ball
     private const int Radius = 7;
     private const float Speed = 0.15f;
     
-    private readonly PrimitiveBatch _primitiveBatch;
-    private readonly PrimitiveDrawing _primitiveDrawing;
-    
     private CircleF _circle;
     private Matrix _localProjection;
     private Matrix _localView;
@@ -25,8 +22,6 @@ public class Ball
         _localProjection = Matrix.CreateOrthographicOffCenter(0f, board.Width,
             board.Height, 0f, 0f, 1f);
         _localView = Matrix.Identity;
-        _primitiveBatch = new PrimitiveBatch(graphicsDevice);
-        _primitiveDrawing = new PrimitiveDrawing(_primitiveBatch);
     }
 
     public void Update(GameTime gameTime)
@@ -133,15 +128,16 @@ public class Ball
         return true;
     }
 
-    public void Draw(SpriteBatch spriteBatch)
+    public void Draw()
     {
-        _primitiveBatch.Begin(ref _localProjection, ref _localView);
-        FillCircle(_circle, Color.White);
-        _primitiveBatch.End();
+        PrimitiveBatch primitiveBatch = Breakout.BreakoutServices.GetService<PrimitiveBatch>();
+        primitiveBatch.Begin(ref _localProjection, ref _localView);
+        FillCircle(primitiveBatch, _circle, Color.White);
+        primitiveBatch.End();
     }
 
     // This is the same method as PrimitiveDrawing DrawSolidCircle() without the lighter fill color 
-    private void FillCircle(CircleF circleF, Color color)
+    private static void FillCircle(PrimitiveBatch primitiveBatch, CircleF circleF, Color color)
     {
         Vector2 center = circleF.Center;
         float radius = circleF.Radius;
@@ -157,13 +153,14 @@ public class Ball
             Vector2 v2 = center +
                          radius * new Vector2((float)Math.Cos(theta + increment), (float)Math.Sin(theta + increment));
 
-            _primitiveBatch.AddVertex(v0, color, PrimitiveType.TriangleList);
-            _primitiveBatch.AddVertex(v1, color, PrimitiveType.TriangleList);
-            _primitiveBatch.AddVertex(v2, color, PrimitiveType.TriangleList);
+            primitiveBatch.AddVertex(v0, color, PrimitiveType.TriangleList);
+            primitiveBatch.AddVertex(v1, color, PrimitiveType.TriangleList);
+            primitiveBatch.AddVertex(v2, color, PrimitiveType.TriangleList);
 
             theta += increment;
         }
 
-        _primitiveDrawing.DrawCircle(center, radius, color);
+        PrimitiveDrawing primitiveDrawing = Breakout.BreakoutServices.GetService<PrimitiveDrawing>();
+        primitiveDrawing.DrawCircle(center, radius, color);
     }
 }

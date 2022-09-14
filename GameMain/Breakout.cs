@@ -1,44 +1,44 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MonoGame.Extended.VectorDraw;
 
 namespace GameMain;
 
-public class Main : Game
+public class Breakout : Game
 {
     // private const int Width = 1280;
     // private const int Height = 720;
-    
-    private readonly GraphicsDeviceManager _graphics;
-    private SpriteBatch _spriteBatch;
-    private SpriteFont _font;
+
+    internal static GameServiceContainer BreakoutServices { get; private set; } = new();
     
     private Board Board { get; set; }
-    private MouseState MouseState { get; set; }
 
-    public Main()
+    public Breakout()
     {
-        _graphics = new GraphicsDeviceManager(this);
+        Disposed += (_, _) =>
+        {
+            Board = null;
+            BreakoutServices = null;
+        };
+        BreakoutServices.AddService(new GraphicsDeviceManager(this));
+        
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
     }
 
     protected override void Initialize()
     {
-        // _graphics.PreferredBackBufferWidth = Width;
-        // _graphics.PreferredBackBufferHeight = Height;
-        // _graphics.ApplyChanges();
+        BreakoutServices.AddService(new SpriteBatch(GraphicsDevice));
+        BreakoutServices.AddService(new PrimitiveBatch(GraphicsDevice));
+        BreakoutServices.AddService(new PrimitiveDrawing(BreakoutServices.GetService<PrimitiveBatch>()));
         base.Initialize();
     }
 
     protected override void LoadContent()
     {
-        _spriteBatch = new SpriteBatch(GraphicsDevice);
-        _font = Content.Load<SpriteFont>("GameFont");
-        Board = new Board(
-            _graphics.GraphicsDevice,
-            _graphics.PreferredBackBufferWidth,
-            _graphics.PreferredBackBufferHeight);
+        BreakoutServices.AddService(Content.Load<SpriteFont>("GameFont"));
+        Board = new Board(GraphicsDevice);
     }
 
     protected override void Update(GameTime gameTime)
@@ -49,8 +49,7 @@ public class Main : Game
             Exit();
         }
 
-        MouseState = Mouse.GetState();
-        Board.Update(gameTime, MouseState);
+        Board.Update(gameTime, Mouse.GetState());
 
         base.Update(gameTime);
     }
@@ -58,8 +57,10 @@ public class Main : Game
     protected override void Draw(GameTime gameTime)
     {
         GraphicsDevice.Clear(Color.CornflowerBlue);
-        Board.Draw(_spriteBatch, _font);
         
+        Board.Draw();
+
+        // SpriteBatch spriteBatch = BreakoutServices.GetService<SpriteBatch>();
         // _spriteBatch.Begin();
         // string text;
         // text = $"screen: {_graphics.GraphicsDevice.Viewport.Width}, {_graphics.GraphicsDevice.Viewport.Height}";

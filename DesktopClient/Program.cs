@@ -1,4 +1,4 @@
 ﻿using GameMain;
 
-using Main game = new();
+using Breakout game = new();
 game.Run();

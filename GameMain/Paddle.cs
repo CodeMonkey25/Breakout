@@ -17,7 +17,7 @@ public class Paddle
     private RectangleF _rectangle;
     public RectangleF Rectangle => _rectangle;
     
-    public Paddle(int boardWidth, int boardHeight)
+    public Paddle(float boardWidth, float boardHeight)
     {
         _maxX = boardWidth - Width;
         float maxY = boardHeight - Height;
@@ -63,8 +63,9 @@ public class Paddle
         _rectangle.X = newX;
     }
 
-    public void Draw(SpriteBatch spriteBatch)
+    public void Draw()
     {
+        SpriteBatch spriteBatch = Breakout.BreakoutServices.GetService<SpriteBatch>();
         spriteBatch.Begin();
         spriteBatch.FillRectangle(_rectangle, Color.Blue);
         spriteBatch.End();
