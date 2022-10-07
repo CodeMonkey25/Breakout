@@ -9,13 +9,19 @@
     <Import_RootNamespace>GameEngine</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)Content\" />
-  </ItemGroup>
-  <ItemGroup>
-    <MonoGameContentReference Include="$(MSBuildThisFileDirectory)Content\Content.mgcb" />
-    <None Include="$(MSBuildThisFileDirectory)Content\Content.mgcb" />
-  </ItemGroup>
-  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)BaseGameState.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Events\BaseGameStateEvent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Events\GameQuit.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Events\GameTick.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Events\Nothing.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\BaseInputCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\BaseInputMapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\InputManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MainGame.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Object\BaseGameObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RectangleShape.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Sound\SoundAttributes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Sound\SoundBankItem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Sound\SoundManager.cs" />
   </ItemGroup>
 </Project>
