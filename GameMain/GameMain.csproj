@@ -1,15 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
-    </PropertyGroup>
-    <ItemGroup>
-        <PackageReference Include="MonoGame.Extended" Version="3.8.0" />
-        <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303">
-            <PrivateAssets>All</PrivateAssets>
-        </PackageReference>
-    </ItemGroup>
-    <ItemGroup>
-        <None Remove="Content\GameFont.spritefont" />
-    </ItemGroup>
-    <Import Project="..\GameEngine\GameEngine.projitems" Label="Shared" />
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="MonoGame.Extended" Version="3.8.0" />
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303">
+      <PrivateAssets>All</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Content\GameFont.spritefont" />
+  </ItemGroup>
+  <Import Project="..\GameEngine\GameEngine.projitems" Label="Shared" />
 </Project>
